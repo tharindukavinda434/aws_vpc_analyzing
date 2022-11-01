@@ -1,0 +1,48 @@
+import json
+import boto3
+
+
+def lambda_handler(event, context):
+    vpc_client = boto3.client('ec2')
+    regions = []
+    
+    
+    for region in vpc_client.describe_regions()['Regions']:
+        regions.append(region['RegionName'])
+        
+    #print(regions)
+    
+    #for region in regions:
+    paginator = vpc_client.get_paginator('describe_vpcs')
+    #print(paginator)
+    response_iterator = paginator.paginate()
+    full_result = response_iterator.build_full_result()
+    
+    vpc_list = []
+    for page in full_result['Vpcs']:
+        
+        vpc_list.append(page)
+        
+        
+    for vpc in vpc_list: 
+        try:
+            print(vpc)
+            
+            #print(type(vpc['Tags']))
+            #LE =  vpc['Tags']
+            #print(LE)
+            #LE1 = LE[0]
+            #print(type(LE1))
+            #LE11 = LE1['Key']
+            #LE12 = LE1['Value']
+            #print(LE11)
+            #print(LE12)
+            
+        except:
+            print('error')
+        
+        
+   
+        
+
+    return(0)
